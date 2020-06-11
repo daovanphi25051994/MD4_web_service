@@ -27,7 +27,7 @@ public class CustomerController {
     @Autowired
     private ICustomerService customerService;
 
-    @GetMapping("/customers/")
+    @GetMapping("/customers")
     public ResponseEntity<List<Customer>> getCustomers() {
         List<Customer> customers = customerService.getAll();
         return new ResponseEntity<>(customers, HttpStatus.OK);
@@ -43,7 +43,7 @@ public class CustomerController {
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
-    @PostMapping("/customers/")
+    @PostMapping("/customers")
     public ResponseEntity<Void> createCustomer(@RequestBody Customer customer, UriComponentsBuilder ucBuilder) {
         System.out.println("Creating Customer " + customer.getLastName());
         customerService.save(customer);
@@ -79,7 +79,7 @@ public class CustomerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/customers/")
+    @DeleteMapping("/customers")
     public ResponseEntity<Customer> removeAllCustomer() {
         System.out.println("Delete All Customer");
         customerService.removeAll();
