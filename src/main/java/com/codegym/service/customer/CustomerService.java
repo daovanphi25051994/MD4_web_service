@@ -17,8 +17,8 @@ public class CustomerService implements ICustomerService {
     }
 
     @Override
-    public Customer save(Customer model) {
-        return customerRepository.save(model);
+    public void save(Customer model) {
+         customerRepository.save(model);
     }
 
     @Override
@@ -29,5 +29,10 @@ public class CustomerService implements ICustomerService {
     @Override
     public void remove(Long id) {
         customerRepository.delete(id);
+    }
+
+    @Override
+    public void removeAll() {
+        customerRepository.deleteAll();
     }
 }

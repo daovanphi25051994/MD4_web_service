@@ -44,7 +44,7 @@ public class CustomerController {
     }
 
     @PostMapping("/customers/")
-    public ResponseEntity<Void> saveCustomer(@RequestBody Customer customer, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Void> createCustomer(@RequestBody Customer customer, UriComponentsBuilder ucBuilder) {
         System.out.println("Creating Customer " + customer.getLastName());
         customerService.save(customer);
         HttpHeaders headers = new HttpHeaders();
@@ -76,6 +76,13 @@ public class CustomerController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         customerService.remove(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/customers/")
+    public ResponseEntity<Customer> removeAllCustomer() {
+        System.out.println("Delete All Customer");
+        customerService.removeAll();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
