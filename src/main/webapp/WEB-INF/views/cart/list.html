@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Cart List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container-fluid row">
+    <div class="col-xl-9">
+        <div class="row" th:each="product : ${cart.getProducts()}">
+            <div class="col-xl-3"><img class="card-img-top"
+                                       th:src="@{/resources/images/{image}(image=${product.getImage()})}"
+                                       width="200px" height="100px"/></div>
+            <div class="col-xl-6">
+                <p th:text="${product.getName()}"></p>
+                <p th:text="${product.getPrice()}"></p>
+                <p>
+                    <span><a th:href="@{/api/carts/{id}(id=${product.getId()})}" class="deleteClass">Delete</a></span>
+                </p>
+            </div>
+            <div class="col-xl-3">
+                <span th:text="${product.getQuantity() * product.getPrice()}"></span>
+                <span><a th:href="@{/product-subtraction/{id}(id=${product.getId()})}">-</a></span>
+                <span th:text="${product.getQuantity()}"></span>
+                <span><a th:href="@{/product-plus/{id}(id=${product.getId()})}">+</a></span>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-xl-3">
+        <div>
+            <p><span>total quantity :</span><span th:text="${cart.getTotalQuantity()}" id="totalQuantity"></span></p>
+        </div>
+        <div>
+            <p><span>total price :</span><span th:text="${cart.getTotalPrice()}" id="totalPrice"></span></p>
+        </div>
+        <div>
+            <button>Mua</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.deleteClass').click(function (event) {
+            let totalQuantity = $('#totalQuantity').html();
+            let totalPrice = $('#totalPrice').html();
+            let newTotalQuantity = parseInt(totalQuantity);
+            let newTotalPrice = parseFloat(totalPrice);
+            let a = $(this);
+            let url = a.attr("href");
+            let json = {
+                "newTotalPrice": newTotalPrice,
+                "newTotalQuantity": newTotalQuantity
+            };
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                url: url,
+                type: "DELETE",
+                data: JSON.stringify(json),
+                success: function (result) {
+                    console.log(result);
+
+                    a.parent().parent().parent().parent().remove();
+                    let ResultTotalQuantity = "";
+                    ResultTotalQuantity += "<span class='success'>";
+                    ResultTotalQuantity += result.quantity + "</span>";
+
+                    let ResultTotalPrice = "";
+                    ResultTotalPrice += "<span class='success'>";
+                    ResultTotalPrice += result.salary + "</span>";
+
+                    $('#totalQuantity').html(ResultTotalQuantity);
+                    $('#totalPrice').html(ResultTotalPrice);
+                }
+            });
+            event.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>

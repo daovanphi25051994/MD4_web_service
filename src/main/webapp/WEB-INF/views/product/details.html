@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Details</title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+<body>
+<div><a th:href="@{/carts}"><span>cart : </span><span id="quantity" th:text="${cart.getTotalQuantity()}"></span></a>
+</div>
+<div><a th:href="@{/}"><p>Back Home</p></a></div>
+
+<form id="cart" th:object="${product}">
+    <table>
+        <tbody>
+        <tr>
+            <td id="id" th:text="${product.getId()}"></td>
+        </tr>
+        <tr>
+            <td id="name" th:text="${product.getName()}"></td>
+        </tr>
+        <tr>
+            <td id="image" th:text="${product.getImage()}"></td>
+        </tr>
+        <tr>
+            <td id="price" th:text="${product.getPrice()}"></td>
+        </tr>
+        <tr>
+            <td><input type="submit" value="add to cart"/></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#cart').submit(function (event) {
+            let id = $('#id').html();
+            let newId = parseInt(id);
+            let name = $('#name').html();
+            let image = $('#image').html();
+            let price = $('#price').html();
+            let newPrice = parseFloat(price);
+            let quantity = 1;
+            let json = {
+                "id": newId,
+                "name": name,
+                "image": image,
+                "price": newPrice,
+                "quantity": quantity
+            };
+            $.ajax({
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                type: "POST",
+                data: JSON.stringify(json),
+                url: "/api/carts",
+                success: function (quan) {
+                    let respContent = "";
+                    respContent += "<span class='success'>" + quan + "</span>";
+                    //  respContent += quan +
+                    $("#quantity").html(respContent);
+                }
+            });
+            event.preventDefault();
+        });
+    });
+</script>
+</body>
+</html>

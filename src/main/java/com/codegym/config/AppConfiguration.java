@@ -1,8 +1,12 @@
 package com.codegym.config;
 
 
+import com.codegym.service.cart.CartService;
+import com.codegym.service.cart.ICartService;
 import com.codegym.service.customer.CustomerService;
 import com.codegym.service.customer.ICustomerService;
+import com.codegym.service.product.IProductService;
+import com.codegym.service.product.ProductService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -10,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -37,6 +42,7 @@ import java.util.Properties;
 @ComponentScan("com.codegym.controller")
 @EnableJpaRepositories("com.codegym.repository")
 @EnableTransactionManagement
+@EnableSpringDataWebSupport
 public class AppConfiguration extends WebMvcConfigurerAdapter implements ApplicationContextAware {
     private ApplicationContext applicationContext;
 
@@ -115,5 +121,13 @@ public class AppConfiguration extends WebMvcConfigurerAdapter implements Applica
     @Bean
     public ICustomerService customerService(){
         return new CustomerService();
+    }
+    @Bean
+    public ICartService cartService(){
+        return  new CartService();
+    }
+    @Bean
+    public IProductService productService(){
+        return new ProductService();
     }
 }
